@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flor Neon 3D - CSS Puro</title>
+    <title>Flor Neon - Perspectiva Frontal 3D</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -14,12 +14,12 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            perspective: 1200px;
         }
         
         /* Sistema de toggle puro CSS */
         #toggle { display: none; }
         
+        /* 1. SCENE: A inclinação para "olhar" para você */
         .scene {
             position: relative;
             width: 100vw;
@@ -27,7 +27,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transform-style: preserve-3d;
+            perspective: 800px;
         }
         
         /* Container da flor */
@@ -35,13 +35,24 @@
             position: relative;
             width: min(80vw, 350px);
             height: min(80vh, 350px);
-            transform-style: preserve-3d;
             cursor: pointer;
         }
         
-        /* Hover effect */
-        .flower-container:hover .holo-flower {
-            filter: brightness(1.3);
+        /* Flor principal - Inclinada para "olhar" para você */
+        .holo-flower {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(65deg) rotateZ(0deg);
+            transform-style: preserve-3d;
+            animation: flowerFloat 8s ease-in-out infinite;
+        }
+        
+        @keyframes flowerFloat {
+            0%, 100% { transform: translate(-50%, -50%) rotateX(65deg) rotateZ(0deg) translateY(0px); }
+            50% { transform: translate(-50%, -50%) rotateX(65deg) rotateZ(0deg) translateY(-15px); }
         }
         
         /* Pausa com checkbox */
@@ -51,94 +62,99 @@
             animation-play-state: paused;
         }
         
-        /* Flor principal */
-        .holo-flower {
+        /* 2. MIOLO: No topo da hierarquia visual - ponto mais próximo */
+        .center {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 50px;
+            height: 50px;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            transform-style: preserve-3d;
-            animation: 
-                flowerRotation 40s linear infinite,
-                flowerFloat 6s ease-in-out infinite;
-        }
-        
-        @keyframes flowerRotation {
-            0% { transform: translate(-50%, -50%) rotateY(0deg); }
-            100% { transform: translate(-50%, -50%) rotateY(360deg); }
-        }
-        
-        @keyframes flowerFloat {
-            0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
-            50% { transform: translate(-50%, -50%) translateY(-20px); }
-        }
-        
-        /* CAULE CENTRAL */
-        .stem {
-            position: absolute;
-            width: 8px;
-            height: 200px;
-            background: linear-gradient(to bottom, 
-                transparent 0%,
-                #00ffff 10%,
-                #ff00ff 40%,
-                #ffff00 70%,
-                transparent 100%);
-            border-radius: 4px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            background: radial-gradient(circle at 30% 30%, 
+                #ffff00 0%, 
+                #ff00ff 40%, 
+                #00ffff 80%);
+            border-radius: 50%;
+            /* O miolo fica "acima" das pétalas no eixo Z */
+            transform: translate(-50%, -50%) translateZ(50px);
             box-shadow: 
-                0 0 20px #00ffff,
-                0 0 40px rgba(0, 255, 255, 0.4);
-            z-index: 1;
+                0 0 40px #ffff00,
+                0 0 80px rgba(255, 255, 0, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.8);
+            z-index: 10;
+            animation: centerPulse 3s ease-in-out infinite;
         }
         
-        /* PÉTALAS - ANIMAÇÃO DE ABRIR/FECHAR */
+        @keyframes centerPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) translateZ(50px) scale(1); 
+                opacity: 0.9; 
+                box-shadow: 0 0 40px #ffff00, 0 0 80px rgba(255, 255, 0, 0.5);
+            }
+            50% { 
+                transform: translate(-50%, -50%) translateZ(50px) scale(1.15); 
+                opacity: 1; 
+                box-shadow: 0 0 60px #ffff00, 0 0 100px rgba(255, 255, 0, 0.7);
+            }
+        }
+        
+        /* 3. PÉTALAS: Movimento de "Abre e Fecha" frontal */
         .petal {
             position: absolute;
-            width: 100px;
-            height: 180px;
-            background: radial-gradient(ellipse at 70% 30%, 
-                rgba(255, 0, 255, 0.95) 0%,
-                rgba(0, 255, 255, 0.7) 40%,
-                transparent 80%);
-            border-radius: 50% 20% 50% 20%;
-            top: 50%;
+            bottom: 50%; /* Fixa a base no centro */
             left: 50%;
-            transform-origin: 50% 100%; /* Base fixa no caule */
+            width: 90px;
+            height: 180px;
+            transform-origin: 50% 100%; /* Base no centro inferior */
+            background: linear-gradient(to top, 
+                rgba(255, 0, 255, 0.95) 0%, 
+                rgba(0, 255, 255, 0.7) 50%, 
+                transparent 100%);
+            clip-path: ellipse(40% 45% at 50% 50%);
+            border-radius: 0% 100% 0% 100% / 0% 100% 0% 100%;
             filter: 
                 hue-rotate(var(--hue)) 
-                drop-shadow(0 0 8px currentColor);
-            z-index: 2;
-            /* ANIMAÇÃO DE ABRIR/FECHAR */
-            animation: petalOpenClose 4s ease-in-out infinite;
+                drop-shadow(0 0 10px currentColor);
+            z-index: 5;
+            
+            /* Variáveis para distribuir em círculo */
+            transform: translateX(-50%) rotateY(var(--rot));
+            
+            /* Animação de respiração frontal */
+            animation: petalBreath 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
             animation-delay: var(--delay);
         }
         
-        /* Keyframe da animação */
-        @keyframes petalOpenClose {
+        /* Keyframe da animação frontal de abrir/fechar */
+        @keyframes petalBreath {
             0%, 100% {
-                /* FECHADA - junto ao caule */
-                transform: translate(-50%, -50%) 
+                /* FECHADA: Curvada para dentro, em direção ao miolo */
+                transform: translateX(-50%) 
                            rotateY(var(--rot)) 
-                           rotateX(85deg) 
-                           translateZ(0px);
-                opacity: 0.6;
-                width: 60px;
+                           rotateX(-70deg) 
+                           translateZ(10px) 
+                           scaleY(0.6);
+                opacity: 0.7;
+                width: 70px;
                 height: 160px;
+                background: linear-gradient(to top, 
+                    rgba(255, 0, 255, 0.8) 0%, 
+                    rgba(0, 255, 255, 0.4) 40%, 
+                    transparent 80%);
             }
             50% {
-                /* ABERTA - 90° do caule */
-                transform: translate(-50%, -50%) 
+                /* ABERTA: Expande para fora, revelando o miolo */
+                transform: translateX(-50%) 
                            rotateY(var(--rot)) 
-                           rotateX(10deg) 
-                           translateZ(100px);
+                           rotateX(-15deg) 
+                           translateZ(30px) 
+                           scaleY(1);
                 opacity: 0.95;
-                width: 100px;
+                width: 90px;
                 height: 180px;
+                background: linear-gradient(to top, 
+                    rgba(255, 0, 255, 0.95) 0%, 
+                    rgba(0, 255, 255, 0.7) 50%, 
+                    transparent 90%);
             }
         }
         
@@ -151,65 +167,67 @@
         }
         .petal2 { 
             --rot: 72deg; 
-            --delay: 0.1s; 
+            --delay: 0.2s; 
             --hue: 72deg; 
             color: #ff55ff; 
         }
         .petal3 { 
             --rot: 144deg; 
-            --delay: 0.2s; 
+            --delay: 0.4s; 
             --hue: 144deg; 
             color: #aa00ff; 
         }
         .petal4 { 
             --rot: 216deg; 
-            --delay: 0.3s; 
+            --delay: 0.6s; 
             --hue: 216deg; 
             color: #00aaff; 
         }
         .petal5 { 
             --rot: 288deg; 
-            --delay: 0.4s; 
+            --delay: 0.8s; 
             --hue: 288deg; 
             color: #00ffff; 
         }
         
-        /* CENTRO DA FLOR */
-        .center {
+        /* 4. CAULE: A base que sustenta o objeto */
+        .stem {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 8px;
+            height: 200px;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(circle, 
-                #ffff00 0%, 
-                #ff00ff 50%, 
-                transparent 70%);
-            border-radius: 50%;
-            box-shadow: 
-                0 0 40px #ffff00,
-                0 0 70px rgba(255, 255, 0, 0.5);
-            z-index: 3;
-            animation: centerPulse 2s ease-in-out infinite;
+            background: linear-gradient(to top, 
+                transparent 0%,
+                #00ffff 20%,
+                #ff00ff 50%,
+                #ffff00 80%,
+                transparent 100%);
+            /* O caule desce no eixo Z para trás da flor */
+            transform: translate(-50%, 50%) rotateX(-90deg);
+            transform-origin: top center;
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+            z-index: 1;
+            animation: stemGlow 4s ease-in-out infinite;
         }
         
-        @keyframes centerPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        @keyframes stemGlow {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
         
-        /* BRILHO DE FUNDO */
+        /* Brilho de fundo */
         .glow {
             position: absolute;
-            width: 200%;
-            height: 200%;
+            width: 180%;
+            height: 180%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: radial-gradient(circle, 
-                rgba(255, 0, 255, 0.12) 0%,
-                rgba(0, 255, 255, 0.08) 25%,
+                rgba(255, 0, 255, 0.1) 0%,
+                rgba(0, 255, 255, 0.05) 30%,
                 transparent 60%);
             border-radius: 50%;
             filter: blur(40px);
@@ -218,8 +236,8 @@
         }
         
         @keyframes glowPulse {
-            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.05); }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
         }
         
         /* Botão de controle CSS */
@@ -279,95 +297,53 @@
             font-weight: bold;
         }
         
-        /* Efeito de fumaça/partículas */
-        .smoke {
+        /* Efeito de partículas */
+        .particle {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-        
-        .smoke-particle {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, 
-                rgba(0, 255, 255, 0.1) 0%,
-                transparent 70%);
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
             border-radius: 50%;
-            filter: blur(20px);
-            animation: smokeFloat 15s linear infinite;
+            opacity: 0;
+            animation: particleFloat 8s linear infinite;
         }
         
-        .smoke-particle:nth-child(1) {
-            top: 10%; left: 15%;
-            animation-delay: 0s;
-            animation-duration: 20s;
-        }
-        .smoke-particle:nth-child(2) {
-            top: 30%; right: 20%;
-            animation-delay: 5s;
-            animation-duration: 25s;
-        }
-        .smoke-particle:nth-child(3) {
-            bottom: 20%; left: 25%;
-            animation-delay: 10s;
-            animation-duration: 18s;
-        }
+        .particle:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; background: #ff00ff; }
+        .particle:nth-child(2) { top: 25%; right: 15%; animation-delay: 2s; background: #00ffff; }
+        .particle:nth-child(3) { bottom: 35%; left: 20%; animation-delay: 4s; background: #ffff00; }
         
-        @keyframes smokeFloat {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.3;
-            }
-            90% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translate(100px, -100px) rotate(180deg);
-                opacity: 0;
-            }
+        @keyframes particleFloat {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-80px) translateX(40px); opacity: 0; }
         }
         
         /* Responsividade */
         @media (max-width: 768px) {
-            .flower-container {
-                width: min(90vw, 280px);
-                height: min(90vh, 280px);
+            .holo-flower {
+                transform: translate(-50%, -50%) rotateX(70deg) rotateZ(0deg);
             }
             
             .petal {
-                width: 80px;
-                height: 140px;
+                width: 75px;
+                height: 150px;
             }
             
-            @keyframes petalOpenClose {
+            @keyframes petalBreath {
                 0%, 100% {
-                    transform: translate(-50%, -50%) 
-                               rotateY(var(--rot)) 
-                               rotateX(85deg) 
-                               translateZ(0px);
-                    width: 50px;
-                    height: 130px;
+                    width: 60px;
+                    height: 140px;
                 }
                 50% {
-                    transform: translate(-50%, -50%) 
-                               rotateY(var(--rot)) 
-                               rotateX(10deg) 
-                               translateZ(80px);
-                    width: 80px;
-                    height: 140px;
+                    width: 75px;
+                    height: 150px;
                 }
             }
             
             .center {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
             }
             
             .stem {
@@ -382,30 +358,29 @@
         }
         
         @media (max-width: 480px) {
-            .flower-container {
-                width: 250px;
-                height: 250px;
+            .holo-flower {
+                transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg);
             }
             
             .petal {
-                width: 70px;
-                height: 120px;
+                width: 65px;
+                height: 130px;
             }
             
-            @keyframes petalOpenClose {
-                50% {
-                    transform: translate(-50%, -50%) 
-                               rotateY(var(--rot)) 
-                               rotateX(10deg) 
-                               translateZ(70px);
-                    width: 70px;
+            @keyframes petalBreath {
+                0%, 100% {
+                    width: 50px;
                     height: 120px;
+                }
+                50% {
+                    width: 65px;
+                    height: 130px;
                 }
             }
             
             .center {
-                width: 30px;
-                height: 30px;
+                width: 35px;
+                height: 35px;
             }
             
             .stem {
@@ -418,12 +393,6 @@
                 top: 15px;
                 padding: 6px 12px;
             }
-            
-            .toggle-btn {
-                padding: 7px 14px;
-                font-size: 11px;
-                bottom: 15px;
-            }
         }
     </style>
 </head>
@@ -433,15 +402,13 @@
     <label for="toggle" class="toggle-btn">PAUSAR ANIMAÇÃO</label>
     
     <div class="instructions">
-        Flor 3D Neon • <span>Abre/Fecha automaticamente</span> • Clique para pausar
+        Flor Neon 3D • <span>Perspectiva Frontal</span> • Abre/Fecha no eixo Z
     </div>
     
-    <!-- Efeito de fumaça -->
-    <div class="smoke">
-        <div class="smoke-particle"></div>
-        <div class="smoke-particle"></div>
-        <div class="smoke-particle"></div>
-    </div>
+    <!-- Partículas -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
     
     <div class="scene">
         <div class="flower-container">
