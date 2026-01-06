@@ -14,13 +14,14 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 800px;
+            touch-action: manipulation;
         }
         
-        /* Sistema de toggle sem JS */
+        /* Sistema toggle */
         #toggle { display: none; }
         
-        /* Camadas de fundo */
+        /* Fundo ajustado */
         .bg-layer {
             position: fixed;
             width: 100%;
@@ -29,117 +30,114 @@
         }
         
         .bg1 {
-            background: radial-gradient(circle at 30% 20%, rgba(0,100,255,0.1), transparent 40%),
-                       radial-gradient(circle at 70% 80%, rgba(255,0,200,0.1), transparent 40%);
-            filter: blur(40px);
-            animation: bg-float 25s infinite ease-in-out;
+            background: radial-gradient(circle at 30% 20%, rgba(0,100,255,0.12), transparent 45%),
+                       radial-gradient(circle at 70% 80%, rgba(255,0,200,0.12), transparent 45%);
+            filter: blur(30px);
+            animation: bg-float 20s infinite ease-in-out;
         }
         
         .bg2 {
-            background: radial-gradient(circle at 60% 30%, rgba(0,255,255,0.08), transparent 35%),
-                       radial-gradient(circle at 40% 70%, rgba(255,0,100,0.08), transparent 35%);
-            filter: blur(60px);
-            animation: bg-float 35s infinite ease-in-out reverse;
+            background: radial-gradient(circle at 60% 30%, rgba(0,255,255,0.08), transparent 40%),
+                       radial-gradient(circle at 40% 70%, rgba(255,0,100,0.08), transparent 40%);
+            filter: blur(40px);
+            animation: bg-float 30s infinite ease-in-out reverse;
         }
         
-        /* Grade holográfica */
+        /* Grade sutil */
         .grid {
             position: fixed;
             width: 200%;
             height: 200%;
             background-image: 
-                linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(rgba(0,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: -2;
-            animation: grid-rotate 25s linear infinite;
+            animation: grid-rotate 20s linear infinite;
             transform-origin: center;
         }
         
         @keyframes bg-float {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(-30px, 20px) scale(1.05); }
-            66% { transform: translate(20px, -25px) scale(0.95); }
+            33% { transform: translate(-20px, 15px) scale(1.03); }
+            66% { transform: translate(15px, -18px) scale(0.97); }
         }
         
         @keyframes grid-rotate {
-            0% { transform: translate(-50%, -50%) rotateX(65deg) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotateX(65deg) rotate(360deg); }
+            0% { transform: translate(-50%, -50%) rotateX(60deg) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotateX(60deg) rotate(360deg); }
         }
         
-        /* Contêiner interativo */
+        /* Container responsivo */
         .flower-container {
             position: relative;
             transform-style: preserve-3d;
             cursor: pointer;
-            transition: transform 0.5s ease;
+            width: min(90vw, 400px);
+            height: min(90vh, 600px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        /* HOVER: cresce e brilha */
-        .flower-container:hover .holo-flower {
-            transform: scale(1.35);
-            filter: brightness(1.4) saturate(1.5);
-        }
-        
-        .flower-container:hover .stem {
-            box-shadow: 0 0 50px #00ffff, 
-                        0 0 80px #ff00ff,
-                        inset 0 0 20px rgba(255,255,255,0.3);
-        }
-        
-        .flower-container:hover .petal {
-            box-shadow: 0 0 70px rgba(0,255,255,0.9),
-                        0 0 100px rgba(255,0,255,0.6),
-                        inset 0 10px 30px rgba(255,255,255,0.2);
-            opacity: 0.95;
-            transform-origin: center 180px;
-        }
-        
-        .flower-container:hover .center {
-            box-shadow: 0 0 100px #ffff00,
-                        0 0 150px rgba(255,255,0,0.5);
-            animation: pulse-fast 1.5s ease-in-out infinite;
-        }
-        
-        .flower-container:hover .glow {
-            opacity: 0.85;
-            transform: scale(1.35);
-            filter: blur(10px);
-        }
-        
-        /* CLICK: inverte direção */
-        #toggle:checked ~ .flower-container .holo-flower {
-            animation: float-inverted 12s ease-in-out infinite, 
-                       rotate-inverted 25s linear infinite;
-        }
-        
-        #toggle:checked ~ .flower-container .center {
-            background: radial-gradient(circle, #00ffff, #ff00ff);
-            box-shadow: 0 0 80px #00ffff;
-        }
-        
-        #toggle:checked ~ .flower-container .stem {
-            background: linear-gradient(to top, #ffff00, #ff00ff);
-        }
-        
-        /* Flor base */
+        /* Flor com proporções corrigidas */
         .holo-flower {
             position: relative;
-            width: 320px;
-            height: 420px;
+            width: 100%;
+            height: 100%;
+            max-width: 350px;
+            max-height: 500px;
             transform-style: preserve-3d;
-            animation: float 12s ease-in-out infinite, rotate 25s linear infinite;
+            animation: float 14s ease-in-out infinite, rotate 30s linear infinite;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
+        /* HOVER melhorado */
+        .flower-container:hover .holo-flower {
+            transform: scale(1.3);
+            filter: brightness(1.4);
+        }
+        
+        .flower-container:hover .stem {
+            box-shadow: 0 0 60px #00ffff, 
+                        0 0 100px #ff00ff,
+                        inset 0 0 25px rgba(255,255,255,0.4);
+            transform: scaleY(1.05);
+        }
+        
+        .flower-container:hover .petal {
+            box-shadow: 0 0 80px rgba(0,255,255,0.9),
+                        0 0 120px rgba(255,0,255,0.7);
+            opacity: 0.95;
+            transform-origin: center 200px;
+        }
+        
+        .flower-container:hover .center {
+            box-shadow: 0 0 120px #ffff00,
+                        0 0 180px rgba(255,255,0,0.6);
+            animation: pulse-fast 1.2s ease-in-out infinite;
+        }
+        
+        /* CLICK inverte animação */
+        #toggle:checked ~ .flower-container .holo-flower {
+            animation: float-inverted 14s ease-in-out infinite, 
+                       rotate-inverted 30s linear infinite;
+        }
+        
+        #toggle:checked ~ .flower-container .center {
+            background: radial-gradient(circle, #ff00ff, #00ffff);
+            box-shadow: 0 0 100px #ff00ff;
+        }
+        
+        /* Animações */
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotateX(5deg) rotateZ(2deg); }
-            50% { transform: translateY(-25px) rotateX(15deg) rotateZ(-2deg); }
+            0%, 100% { transform: translateY(0) rotateX(5deg) rotateZ(1deg); }
+            50% { transform: translateY(-20px) rotateX(12deg) rotateZ(-1deg); }
         }
         
         @keyframes float-inverted {
-            0%, 100% { transform: translateY(0) rotateX(175deg) rotateZ(2deg); }
-            50% { transform: translateY(-25px) rotateX(165deg) rotateZ(-2deg); }
+            0%, 100% { transform: translateY(0) rotateX(175deg) rotateZ(1deg); }
+            50% { transform: translateY(-20px) rotateX(168deg) rotateZ(-1deg); }
         }
         
         @keyframes rotate {
@@ -152,21 +150,23 @@
             100% { transform: rotateY(-360deg); }
         }
         
-        /* Caule com detalhes */
+        /* CAULE MAIOR E MAIS GROSSO */
         .stem {
             position: absolute;
-            width: 14px;
-            height: 220px;
+            width: 18px; /* Aumentado */
+            height: 280px; /* Aumentado */
             bottom: 0;
-            left: calc(50% - 7px);
+            left: calc(50% - 9px);
             background: linear-gradient(to top, 
                 #00ffff 0%, 
-                #00ffff 20%, 
+                #00ffff 25%, 
                 #ff00ff 50%, 
-                #ff00ff 80%);
-            border-radius: 7px;
-            box-shadow: 0 0 40px #00ffff,
-                        inset 0 0 15px rgba(255,255,255,0.4);
+                #ff00ff 75%,
+                #ffff00 100%);
+            border-radius: 9px;
+            box-shadow: 0 0 50px #00ffff,
+                        inset 0 0 20px rgba(255,255,255,0.5),
+                        inset 0 -10px 30px rgba(0,0,0,0.3);
             transform-origin: center bottom;
             transition: all 0.4s;
             z-index: 1;
@@ -178,69 +178,73 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255,255,255,0.2), 
-                transparent);
+                transparent 20%, 
+                rgba(255,255,255,0.3) 50%, 
+                transparent 80%);
             border-radius: inherit;
         }
         
-        /* Pétalas detalhadas */
+        /* PÉTALAS MAIORES E MAIS IMPONENTES */
         .petal {
             position: absolute;
-            width: 110px;
-            height: 190px;
+            width: 140px; /* Aumentado */
+            height: 220px; /* Aumentado */
             background: radial-gradient(circle at 50% 20%, 
-                rgba(255,0,255,0.9) 0%, 
-                rgba(0,255,255,0.7) 40%, 
-                rgba(0,255,255,0.4) 70%);
-            border-radius: 55% 55% 50% 50% / 60% 60% 40% 40%;
-            box-shadow: 0 0 60px rgba(0,255,255,0.8),
-                        inset 0 8px 25px rgba(255,255,255,0.3),
-                        inset 0 -8px 15px rgba(0,0,0,0.2);
-            opacity: 0.88;
-            left: calc(50% - 55px);
-            transform-origin: center 185px;
+                rgba(255,0,255,0.95) 0%, 
+                rgba(0,255,255,0.8) 40%, 
+                rgba(0,255,255,0.5) 70%);
+            border-radius: 60% 60% 55% 55% / 65% 65% 45% 45%;
+            box-shadow: 0 0 70px rgba(0,255,255,0.85),
+                        inset 0 10px 35px rgba(255,255,255,0.4),
+                        inset 0 -10px 20px rgba(0,0,0,0.2),
+                        0 5px 15px rgba(0,0,0,0.3);
+            opacity: 0.9;
+            left: calc(50% - 70px);
+            transform-origin: center 210px;
             transition: all 0.4s;
-            filter: brightness(1.1);
+            filter: brightness(1.1) contrast(1.1);
         }
         
         .petal::after {
             content: '';
             position: absolute;
-            top: 15%;
+            top: 20%;
             left: 25%;
             width: 50%;
-            height: 30%;
+            height: 35%;
             background: radial-gradient(circle, 
-                rgba(255,255,255,0.4) 0%, 
+                rgba(255,255,255,0.5) 0%, 
                 transparent 70%);
             border-radius: 50%;
-            filter: blur(3px);
+            filter: blur(5px);
         }
         
-        .petal1 { transform: rotate(0deg) translateY(-125px) rotateX(25deg); }
-        .petal2 { transform: rotate(72deg) translateY(-125px) rotateX(25deg) rotateZ(5deg); }
-        .petal3 { transform: rotate(144deg) translateY(-125px) rotateX(25deg) rotateZ(-5deg); }
-        .petal4 { transform: rotate(216deg) translateY(-125px) rotateX(25deg) rotateZ(3deg); }
-        .petal5 { transform: rotate(288deg) translateY(-125px) rotateX(25deg) rotateZ(-3deg); }
+        /* Distribuição das pétalas maiores */
+        .petal1 { transform: rotate(0deg) translateY(-150px) rotateX(25deg) scale(1); }
+        .petal2 { transform: rotate(72deg) translateY(-150px) rotateX(25deg) rotateZ(8deg) scale(0.98); }
+        .petal3 { transform: rotate(144deg) translateY(-150px) rotateX(25deg) rotateZ(-6deg) scale(1.02); }
+        .petal4 { transform: rotate(216deg) translateY(-150px) rotateX(25deg) rotateZ(4deg) scale(0.99); }
+        .petal5 { transform: rotate(288deg) translateY(-150px) rotateX(25deg) rotateZ(-7deg) scale(1.01); }
         
-        /* Centro complexo */
+        /* CENTRO MAIOR */
         .center {
             position: absolute;
-            width: 85px;
-            height: 85px;
-            top: 110px;
-            left: calc(50% - 42.5px);
-            background: radial-gradient(circle at 30% 30%, 
+            width: 100px; /* Aumentado */
+            height: 100px;
+            top: 130px;
+            left: calc(50% - 50px);
+            background: radial-gradient(circle at 35% 35%, 
                 #ffff00 0%, 
-                #ff00ff 50%, 
-                #00ffff 100%);
+                #ff00ff 40%, 
+                #00ffff 80%,
+                transparent 120%);
             border-radius: 50%;
-            box-shadow: 0 0 80px #ffff00,
-                        0 0 120px rgba(255,255,0,0.4),
-                        inset 0 0 40px rgba(255,255,255,0.6);
+            box-shadow: 0 0 100px #ffff00,
+                        0 0 150px rgba(255,255,0,0.5),
+                        inset 0 0 50px rgba(255,255,255,0.7),
+                        0 10px 30px rgba(0,0,0,0.4);
             animation: pulse 4s ease-in-out infinite,
-                       rotate-slow 20s linear infinite;
+                       rotate-center 25s linear infinite;
             transition: all 0.4s;
             z-index: 2;
         }
@@ -248,56 +252,58 @@
         .center::before {
             content: '';
             position: absolute;
-            top: 15%;
-            left: 15%;
-            width: 70%;
-            height: 70%;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
             background: radial-gradient(circle, 
-                rgba(255,255,255,0.8) 0%, 
+                rgba(255,255,255,0.9) 0%, 
                 transparent 70%);
             border-radius: 50%;
-            filter: blur(8px);
+            filter: blur(10px);
         }
         
         @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
-            50% { transform: scale(1.18) rotate(180deg); opacity: 1; }
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
         }
         
         @keyframes pulse-fast {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.25); opacity: 1; }
+            0%, 100% { transform: scale(1); opacity: 0.95; }
+            50% { transform: scale(1.3); opacity: 1; }
         }
         
-        @keyframes rotate-slow {
+        @keyframes rotate-center {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         
-        /* Brilho holográfico */
+        /* BRILHO MAIOR */
         .glow {
             position: absolute;
-            width: 420px;
-            height: 420px;
+            width: 450px;
+            height: 450px;
             background: radial-gradient(circle, 
                 rgba(0,255,255,0.25) 0%, 
-                rgba(255,0,255,0.15) 30%, 
-                transparent 70%);
+                rgba(255,0,255,0.18) 35%, 
+                rgba(255,255,0,0.1) 50%,
+                transparent 75%);
             border-radius: 50%;
-            animation: glow-pulse 6s ease-in-out infinite;
-            top: 0;
-            left: calc(50% - 210px);
+            animation: glow-pulse 7s ease-in-out infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             transition: all 0.5s;
             z-index: -1;
-            filter: blur(15px);
+            filter: blur(20px);
         }
         
         @keyframes glow-pulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.12); }
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.15); }
         }
         
-        /* Partículas com CSS puro */
+        /* Partículas sutis */
         .particles {
             position: fixed;
             width: 100%;
@@ -307,97 +313,156 @@
         
         .particle {
             position: absolute;
-            background: rgba(0, 255, 255, 0.6);
+            background: rgba(0, 255, 255, 0.4);
             border-radius: 50%;
-            box-shadow: 0 0 15px #00ffff;
-            animation-duration: 15s;
+            box-shadow: 0 0 12px #00ffff;
+            animation-duration: 20s;
             animation-iteration-count: infinite;
-            animation-timing-function: linear;
         }
         
         .particle:nth-child(1) {
             width: 3px; height: 3px;
-            top: 20%; left: 10%;
-            animation: particle1 18s infinite;
+            top: 15%; left: 15%;
+            animation: particle1 25s infinite;
         }
         .particle:nth-child(2) {
-            width: 2px; height: 2px;
-            top: 60%; left: 80%;
-            animation: particle2 22s infinite;
-        }
-        .particle:nth-child(3) {
             width: 4px; height: 4px;
-            top: 40%; left: 20%;
-            animation: particle3 16s infinite;
-        }
-        .particle:nth-child(4) {
-            width: 2px; height: 2px;
-            top: 80%; left: 50%;
-            animation: particle4 25s infinite;
+            top: 70%; left: 85%;
+            animation: particle2 30s infinite;
         }
         
         @keyframes particle1 {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-            50% { transform: translate(80px, -60px) scale(1.6); opacity: 0.9; }
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(100px, -80px) scale(1.8); opacity: 0.8; }
         }
         @keyframes particle2 {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-            50% { transform: translate(-100px, 40px) scale(1.4); opacity: 0.8; }
-        }
-        @keyframes particle3 {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-            50% { transform: translate(60px, 70px) scale(1.8); opacity: 1; }
-        }
-        @keyframes particle4 {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-            50% { transform: translate(-50px, -80px) scale(1.3); opacity: 0.7; }
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(-120px, 60px) scale(1.6); opacity: 0.9; }
         }
         
-        /* Botão de toggle estilizado */
+        /* Botão responsivo */
         .toggle-btn {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 255, 255, 0.1);
+            background: rgba(0, 255, 255, 0.15);
             color: #00ffff;
-            padding: 12px 25px;
-            border-radius: 30px;
+            padding: 14px 28px;
+            border-radius: 35px;
             cursor: pointer;
             font-family: sans-serif;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: bold;
             border: 2px solid #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
             transition: all 0.3s;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
             z-index: 100;
+            min-width: 200px;
+            text-align: center;
         }
         
-        .toggle-btn:hover {
-            background: rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
-            transform: translateX(-50%) scale(1.05);
+        .toggle-btn:hover, .toggle-btn:active {
+            background: rgba(0, 255, 255, 0.25);
+            box-shadow: 0 0 35px rgba(0, 255, 255, 0.9);
+            transform: translateX(-50%) scale(1.08);
         }
         
         #toggle:checked + .toggle-btn {
-            background: rgba(255, 0, 255, 0.2);
+            background: rgba(255, 0, 255, 0.25);
             border-color: #ff00ff;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
             color: #ff00ff;
+        }
+        
+        /* Media query para mobile */
+        @media (max-width: 768px) {
+            .holo-flower {
+                max-width: 300px;
+                max-height: 450px;
+            }
+            
+            .stem {
+                width: 16px;
+                height: 250px;
+                left: calc(50% - 8px);
+            }
+            
+            .petal {
+                width: 120px;
+                height: 190px;
+                left: calc(50% - 60px);
+                transform-origin: center 180px;
+            }
+            
+            .petal1 { transform: rotate(0deg) translateY(-140px) rotateX(25deg) scale(1); }
+            .petal2 { transform: rotate(72deg) translateY(-140px) rotateX(25deg) rotateZ(8deg) scale(0.98); }
+            .petal3 { transform: rotate(144deg) translateY(-140px) rotateX(25deg) rotateZ(-6deg) scale(1.02); }
+            .petal4 { transform: rotate(216deg) translateY(-140px) rotateX(25deg) rotateZ(4deg) scale(0.99); }
+            .petal5 { transform: rotate(288deg) translateY(-140px) rotateX(25deg) rotateZ(-7deg) scale(1.01); }
+            
+            .center {
+                width: 85px;
+                height: 85px;
+                top: 120px;
+                left: calc(50% - 42.5px);
+            }
+            
+            .glow {
+                width: 380px;
+                height: 380px;
+            }
+            
+            .toggle-btn {
+                padding: 12px 24px;
+                font-size: 15px;
+                min-width: 180px;
+                bottom: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .holo-flower {
+                max-width: 280px;
+                max-height: 420px;
+            }
+            
+            .stem {
+                width: 14px;
+                height: 220px;
+            }
+            
+            .petal {
+                width: 110px;
+                height: 180px;
+                left: calc(50% - 55px);
+            }
+            
+            .center {
+                width: 75px;
+                height: 75px;
+                top: 110px;
+                left: calc(50% - 37.5px);
+            }
+            
+            .toggle-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                min-width: 160px;
+            }
         }
     </style>
 </head>
 <body>
     <input type="checkbox" id="toggle">
-    <label for="toggle" class="toggle-btn">INVERTER DIREÇÃO</label>
+    <label for="toggle" class="toggle-btn">INVERTER ANIMAÇÃO</label>
     
     <div class="bg-layer bg1"></div>
     <div class="bg-layer bg2"></div>
     <div class="grid"></div>
     
     <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
         <div class="particle"></div>
         <div class="particle"></div>
     </div>
