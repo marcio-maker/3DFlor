@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flor Neon - Perspectiva Frontal 3D</title>
+    <title>Flor Neon - Miolo no Caule</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -19,7 +19,7 @@
         /* Sistema de toggle puro CSS */
         #toggle { display: none; }
         
-        /* 1. SCENE: A inclinação para "olhar" para você */
+        /* 1. SCENE: Perspectiva frontal */
         .scene {
             position: relative;
             width: 100vw;
@@ -27,7 +27,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 800px;
+            perspective: 700px;
         }
         
         /* Container da flor */
@@ -62,45 +62,45 @@
             animation-play-state: paused;
         }
         
-        /* 2. MIOLO: No topo da hierarquia visual - ponto mais próximo */
+        /* 2. MIOLO: Descido até encontrar o caule */
         .center {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            top: 50%;
+            width: 40px;
+            height: 40px;
+            top: 50%; /* Centralizado verticalmente */
             left: 50%;
             background: radial-gradient(circle at 30% 30%, 
                 #ffff00 0%, 
                 #ff00ff 40%, 
                 #00ffff 80%);
             border-radius: 50%;
-            /* O miolo fica "acima" das pétalas no eixo Z */
-            transform: translate(-50%, -50%) translateZ(50px);
+            /* MIOLO NO CAULE: translateY ajusta a posição vertical */
+            transform: translate(-50%, 30%) translateZ(5px);
             box-shadow: 
-                0 0 40px #ffff00,
-                0 0 80px rgba(255, 255, 0, 0.5),
-                inset 0 0 20px rgba(255, 255, 255, 0.8);
-            z-index: 10;
+                0 0 30px #ffff00,
+                0 0 60px rgba(255, 255, 0, 0.5),
+                inset 0 0 15px rgba(255, 255, 255, 0.8);
+            z-index: 3; /* Entre caule (1) e pétalas (5) */
             animation: centerPulse 3s ease-in-out infinite;
         }
         
         @keyframes centerPulse {
             0%, 100% { 
-                transform: translate(-50%, -50%) translateZ(50px) scale(1); 
+                transform: translate(-50%, 30%) translateZ(5px) scale(1); 
                 opacity: 0.9; 
-                box-shadow: 0 0 40px #ffff00, 0 0 80px rgba(255, 255, 0, 0.5);
+                box-shadow: 0 0 30px #ffff00, 0 0 60px rgba(255, 255, 0, 0.5);
             }
             50% { 
-                transform: translate(-50%, -50%) translateZ(50px) scale(1.15); 
+                transform: translate(-50%, 30%) translateZ(5px) scale(1.15); 
                 opacity: 1; 
-                box-shadow: 0 0 60px #ffff00, 0 0 100px rgba(255, 255, 0, 0.7);
+                box-shadow: 0 0 45px #ffff00, 0 0 80px rgba(255, 255, 0, 0.7);
             }
         }
         
         /* 3. PÉTALAS: Movimento de "Abre e Fecha" frontal */
         .petal {
             position: absolute;
-            bottom: 50%; /* Fixa a base no centro */
+            bottom: 50%; /* Base fixa no centro */
             left: 50%;
             width: 90px;
             height: 180px;
@@ -114,7 +114,7 @@
             filter: 
                 hue-rotate(var(--hue)) 
                 drop-shadow(0 0 10px currentColor);
-            z-index: 5;
+            z-index: 5; /* Acima do miolo */
             
             /* Variáveis para distribuir em círculo */
             transform: translateX(-50%) rotateY(var(--rot));
@@ -127,11 +127,11 @@
         /* Keyframe da animação frontal de abrir/fechar */
         @keyframes petalBreath {
             0%, 100% {
-                /* FECHADA: Curvada para dentro, em direção ao miolo */
+                /* FECHADA: Curvada para dentro, envolvendo o miolo */
                 transform: translateX(-50%) 
                            rotateY(var(--rot)) 
-                           rotateX(-70deg) 
-                           translateZ(10px) 
+                           rotateX(-75deg) 
+                           translateZ(15px) 
                            scaleY(0.6);
                 opacity: 0.7;
                 width: 70px;
@@ -142,11 +142,11 @@
                     transparent 80%);
             }
             50% {
-                /* ABERTA: Expande para fora, revelando o miolo */
+                /* ABERTA: Expande para fora, revelando o miolo abaixo */
                 transform: translateX(-50%) 
                            rotateY(var(--rot)) 
                            rotateX(-15deg) 
-                           translateZ(30px) 
+                           translateZ(35px) 
                            scaleY(1);
                 opacity: 0.95;
                 width: 90px;
@@ -190,31 +190,39 @@
             color: #00ffff; 
         }
         
-        /* 4. CAULE: A base que sustenta o objeto */
+        /* 4. CAULE: A base onde o miolo se apoia */
         .stem {
             position: absolute;
-            width: 8px;
-            height: 200px;
+            width: 10px;
+            height: 180px;
             top: 50%;
             left: 50%;
             background: linear-gradient(to top, 
                 transparent 0%,
-                #00ffff 20%,
-                #ff00ff 50%,
-                #ffff00 80%,
+                #00ffff 15%,
+                #ff00ff 45%,
+                #ffff00 75%,
                 transparent 100%);
-            /* O caule desce no eixo Z para trás da flor */
+            /* O caule desce verticalmente */
             transform: translate(-50%, 50%) rotateX(-90deg);
             transform-origin: top center;
-            border-radius: 4px;
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
-            z-index: 1;
+            border-radius: 5px;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.6),
+                0 0 40px rgba(0, 255, 255, 0.3);
+            z-index: 1; /* Atrás de tudo */
             animation: stemGlow 4s ease-in-out infinite;
         }
         
         @keyframes stemGlow {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+            0%, 100% { 
+                opacity: 0.7; 
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+            }
+            50% { 
+                opacity: 1; 
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            }
         }
         
         /* Brilho de fundo */
@@ -300,8 +308,8 @@
         /* Efeito de partículas */
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             background: #00ffff;
             border-radius: 50%;
             opacity: 0;
@@ -318,6 +326,36 @@
             90% { opacity: 0.7; }
             100% { transform: translateY(-80px) translateX(40px); opacity: 0; }
         }
+        
+        /* Linhas de energia conectando miolo às pétalas */
+        .energy-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 80px;
+            background: linear-gradient(to top, 
+                transparent 0%,
+                rgba(255, 255, 0, 0.6) 30%,
+                rgba(255, 0, 255, 0.4) 70%,
+                transparent 100%);
+            transform-origin: bottom center;
+            z-index: 2; /* Entre miolo e pétalas */
+            opacity: 0.4;
+            animation: linePulse 3s ease-in-out infinite;
+            animation-delay: var(--line-delay);
+        }
+        
+        @keyframes linePulse {
+            0%, 100% { opacity: 0.2; height: 60px; }
+            50% { opacity: 0.6; height: 80px; }
+        }
+        
+        .line1 { transform: translate(-50%, 30%) rotateY(0deg) rotateX(90deg); --line-delay: 0s; }
+        .line2 { transform: translate(-50%, 30%) rotateY(72deg) rotateX(90deg); --line-delay: 0.3s; }
+        .line3 { transform: translate(-50%, 30%) rotateY(144deg) rotateX(90deg); --line-delay: 0.6s; }
+        .line4 { transform: translate(-50%, 30%) rotateY(216deg) rotateX(90deg); --line-delay: 0.9s; }
+        .line5 { transform: translate(-50%, 30%) rotateY(288deg) rotateX(90deg); --line-delay: 1.2s; }
         
         /* Responsividade */
         @media (max-width: 768px) {
@@ -342,12 +380,14 @@
             }
             
             .center {
-                width: 40px;
-                height: 40px;
+                width: 35px;
+                height: 35px;
+                transform: translate(-50%, 35%) translateZ(5px);
             }
             
             .stem {
-                height: 180px;
+                height: 160px;
+                width: 8px;
             }
             
             .toggle-btn {
@@ -379,12 +419,13 @@
             }
             
             .center {
-                width: 35px;
-                height: 35px;
+                width: 30px;
+                height: 30px;
+                transform: translate(-50%, 40%) translateZ(5px);
             }
             
             .stem {
-                height: 160px;
+                height: 140px;
                 width: 6px;
             }
             
@@ -402,7 +443,7 @@
     <label for="toggle" class="toggle-btn">PAUSAR ANIMAÇÃO</label>
     
     <div class="instructions">
-        Flor Neon 3D • <span>Perspectiva Frontal</span> • Abre/Fecha no eixo Z
+        Flor Neon • <span>Miolo no Caule</span> • Perspectiva Frontal
     </div>
     
     <!-- Partículas -->
@@ -415,12 +456,22 @@
             <div class="holo-flower">
                 <div class="glow"></div>
                 <div class="stem"></div>
+                
+                <!-- Linhas de energia conectando miolo às pétalas -->
+                <div class="energy-line line1"></div>
+                <div class="energy-line line2"></div>
+                <div class="energy-line line3"></div>
+                <div class="energy-line line4"></div>
+                <div class="energy-line line5"></div>
+                
+                <div class="center"></div>
+                
+                <!-- Pétalas -->
                 <div class="petal petal1"></div>
                 <div class="petal petal2"></div>
                 <div class="petal petal3"></div>
                 <div class="petal petal4"></div>
                 <div class="petal petal5"></div>
-                <div class="center"></div>
             </div>
         </div>
     </div>
