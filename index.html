@@ -5,400 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flor Holográfica Neon</title>
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
-        :root {
-            --rotation: 0deg;
-            --petal-rotation: 0deg;
-            --hover-depth: 0px;
-            --bg-opacity: 0.3;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: #000010;
+            background: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            perspective: 1200px;
-            transform-style: preserve-3d;
         }
         
-        /* Sistema toggle */
-        #toggle { 
-            display: none; 
-        }
+        /* Sistema toggle simples */
+        #toggle { display: none; }
         
-        /* Camadas de profundidade com parallax */
-        .depth-layer {
-            position: fixed;
-            width: 120%;
-            height: 120%;
-            transform-style: preserve-3d;
-            animation: depth-float 40s infinite cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .layer-1 {
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 50, 150, 0.15) 0%, transparent 50%);
-            filter: blur(40px);
-            transform: translateZ(-1000px);
-            animation-duration: 60s;
-        }
-        
-        .layer-2 {
-            background: 
-                radial-gradient(circle at 60% 40%, rgba(0, 100, 200, 0.1) 0%, transparent 45%);
-            filter: blur(30px);
-            transform: translateZ(-700px);
-            animation-duration: 45s;
-            animation-direction: reverse;
-        }
-        
-        .layer-3 {
-            background: 
-                radial-gradient(circle at 40% 60%, rgba(150, 0, 200, 0.08) 0%, transparent 40%);
-            filter: blur(20px);
-            transform: translateZ(-400px);
-            animation-duration: 30s;
-        }
-        
-        @keyframes depth-float {
-            0% { 
-                transform: translateZ(var(--z)) rotate(0deg) translateX(0) translateY(0); 
-            }
-            25% { 
-                transform: translateZ(var(--z)) rotate(90deg) translateX(20px) translateY(-10px); 
-            }
-            50% { 
-                transform: translateZ(var(--z)) rotate(180deg) translateX(0) translateY(20px); 
-            }
-            75% { 
-                transform: translateZ(var(--z)) rotate(270deg) translateX(-20px) translateY(0); 
-            }
-            100% { 
-                transform: translateZ(var(--z)) rotate(360deg) translateX(0) translateY(0); 
-            }
-        }
-        
-        /* Grade holográfica */
-        .hologrid {
-            position: fixed;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                linear-gradient(rgba(0, 200, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 200, 255, 0.03) 1px, transparent 1px);
-            background-size: 100px 100px;
-            animation: grid-rotate 80s linear infinite;
-            transform-style: preserve-3d;
-            transform: translate(-50%, -50%) rotateX(85deg) translateZ(-800px);
-            top: 50%;
-            left: 50%;
-        }
-        
-        @keyframes grid-rotate {
-            0% { 
-                transform: translate(-50%, -50%) rotateX(85deg) rotate(0deg) translateZ(-800px); 
-            }
-            100% { 
-                transform: translate(-50%, -50%) rotateX(85deg) rotate(360deg) translateZ(-800px); 
-            }
-        }
-        
-        /* Container principal */
         .scene {
             position: relative;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            transform-style: preserve-3d;
-            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        /* Container da flor - CENTRALIZADO */
+        /* Container da flor */
         .flower-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-style: preserve-3d;
+            position: relative;
             cursor: pointer;
-            width: 350px;
-            height: 500px;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: min(90vw, 500px);
+            height: min(90vh, 700px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        /* Flor com eixo central definido */
+        /* HOVER SIMPLES: cresce */
+        .flower-container:hover .holo-flower {
+            transform: scale(1.2);
+            filter: brightness(1.3);
+        }
+        
+        /* CLICK: inverte posição */
+        #toggle:checked ~ .scene .holo-flower {
+            transform: rotateX(180deg) rotateY(180deg);
+        }
+        
+        #toggle:checked ~ .scene .petal {
+            transform: rotateY(var(--rotation)) translateY(-180px) rotateX(30deg) rotateZ(180deg);
+        }
+        
+        #toggle:checked + .toggle-btn {
+            background: rgba(255, 0, 255, 0.3);
+            border-color: #ff00ff;
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
+            color: #ff00ff;
+        }
+        
+        /* Flor principal */
         .holo-flower {
             position: relative;
             width: 100%;
             height: 100%;
-            transform-style: preserve-3d;
-            animation: float 16s ease-in-out infinite, rotate 30s linear infinite;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Eixo central definido */
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
+            animation: float 8s ease-in-out infinite;
+            transition: transform 0.6s ease;
         }
         
         @keyframes float {
-            0%, 100% { 
-                transform: translateY(0) rotateX(5deg) rotateZ(0deg); 
-            }
-            50% { 
-                transform: translateY(-20px) rotateX(15deg) rotateZ(2deg); 
-            }
+            0%, 100% { transform: translateY(0) rotateX(5deg); }
+            50% { transform: translateY(-20px) rotateX(10deg); }
         }
         
-        @keyframes rotate {
-            0% { 
-                transform: rotateY(0deg); 
-            }
-            100% { 
-                transform: rotateY(360deg); 
-            }
-        }
-        
-        /* === OBJETO PRIMEIRO: Estrutura 3D Correta === */
-        
-        /* CAULE - No fundo */
+        /* CAULE - EIXO CENTRAL */
         .stem {
             position: absolute;
-            width: 24px;
-            height: 340px;
+            width: 20px;
+            height: 60%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             background: linear-gradient(to top, 
-                #00aaff 0%, 
-                #00ffff 30%, 
-                #ff00ff 60%, 
-                #ff00ff 90%);
-            border-radius: 12px;
-            transform: translateZ(10px);
-            transform-origin: center bottom;
+                #00ffff 0%, 
+                #ff00ff 50%, 
+                #ffff00 100%);
+            border-radius: 10px;
+            box-shadow: 0 0 40px #00ffff;
             z-index: 1;
-            /* Sem efeitos inicialmente */
-            box-shadow: none;
-            filter: none;
         }
         
-        /* PÉTALAS - Sistema de rotação corrigido */
+        /* PÉTALAS MAIORES E PARA FORA */
         .petal {
             position: absolute;
-            width: 160px;
-            height: 240px;
-            background: rgba(255, 0, 255, 0.8); /* Cor sólida inicial */
+            width: 40%;
+            height: 50%;
+            background: radial-gradient(circle at 50% 30%, 
+                rgba(255, 0, 255, 0.95) 0%, 
+                rgba(0, 255, 255, 0.8) 50%);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            /* Transform-origin na BASE da pétala */
-            transform-origin: center 100%;
-            transform-style: preserve-3d;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 60px rgba(0,255,255,0.8);
+            opacity: 0.9;
+            left: 50%;
+            top: 50%;
+            transform-origin: center bottom;
+            transition: all 0.4s;
             z-index: 2;
-            /* Posicionamento central */
-            top: calc(50% - 120px);
-            left: calc(50% - 80px);
-            /* Sem efeitos inicialmente */
-            box-shadow: none;
-            filter: none;
         }
         
-        /* Distribuição radial das pétalas em formato de taça */
+        /* Pétalas para FORA, não para dentro */
         .petal1 { 
-            transform: rotateY(calc(0 * 72deg)) translateZ(60px) rotateX(35deg); 
+            --rotation: 0deg;
+            transform: rotateY(0deg) translateY(-200px) rotateX(25deg);
         }
         .petal2 { 
-            transform: rotateY(calc(1 * 72deg)) translateZ(60px) rotateX(35deg); 
+            --rotation: 72deg;
+            transform: rotateY(72deg) translateY(-200px) rotateX(25deg);
         }
         .petal3 { 
-            transform: rotateY(calc(2 * 72deg)) translateZ(60px) rotateX(35deg); 
+            --rotation: 144deg;
+            transform: rotateY(144deg) translateY(-200px) rotateX(25deg);
         }
         .petal4 { 
-            transform: rotateY(calc(3 * 72deg)) translateZ(60px) rotateX(35deg); 
+            --rotation: 216deg;
+            transform: rotateY(216deg) translateY(-200px) rotateX(25deg);
         }
         .petal5 { 
-            transform: rotateY(calc(4 * 72deg)) translateZ(60px) rotateX(35deg); 
+            --rotation: 288deg;
+            transform: rotateY(288deg) translateY(-200px) rotateX(25deg);
         }
         
-        /* CENTRO - No eixo Z mais à frente */
+        /* CENTRO */
         .center {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            background: #ffff00; /* Cor sólida inicial */
+            width: 80px;
+            height: 80px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateY(-180px);
+            background: radial-gradient(circle, #ffff00, #ff00ff);
             border-radius: 50%;
-            transform: translateZ(80px);
-            /* Centralizado exatamente no eixo */
-            top: calc(50% - 50px);
-            left: calc(50% - 50px);
+            box-shadow: 0 0 80px #ffff00;
+            animation: pulse 4s ease-in-out infinite;
             z-index: 3;
-            /* Sem efeitos inicialmente */
-            box-shadow: none;
-            filter: none;
-        }
-        
-        /* === HOVER: Projeção 3D === */
-        
-        .flower-container:hover .holo-flower {
-            transform: translateZ(200px) scale(1.15);
-        }
-        
-        .flower-container:hover ~ .depth-layer {
-            opacity: 0.2;
-            filter: blur(60px);
-        }
-        
-        /* Ajuste de pétalas no hover */
-        .flower-container:hover .petal {
-            transform-origin: center 100%;
-            transform: rotateY(var(--petal-rotation)) translateZ(80px) rotateX(30deg);
-        }
-        
-        /* === LUZ E CONTRASTE (Aplicado apenas após estrutura correta) === */
-        
-        /* Efeitos ativados apenas se a estrutura 3D estiver correta */
-        .petal {
-            background: radial-gradient(circle at 50% 25%, 
-                rgba(255, 0, 255, 0.95) 0%, 
-                rgba(0, 255, 255, 0.85) 35%, 
-                rgba(0, 255, 255, 0.6) 65%);
-            box-shadow: 
-                0 0 40px rgba(0, 255, 255, 0.4),
-                inset 0 8px 25px rgba(255, 255, 255, 0.3);
-            filter: brightness(1.1);
-        }
-        
-        .stem {
-            box-shadow: 
-                0 0 30px rgba(0, 255, 255, 0.3),
-                inset 0 0 15px rgba(255, 255, 255, 0.4);
-        }
-        
-        .center {
-            background: radial-gradient(circle at 35% 35%, 
-                #ffff00 0%, 
-                #ff00ff 40%, 
-                #00ffff 70%);
-            box-shadow: 
-                0 0 60px rgba(255, 255, 0, 0.4),
-                inset 0 0 30px rgba(255, 255, 255, 0.5);
-            animation: pulse 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { 
-                transform: translateZ(80px) scale(1); 
-                opacity: 0.9; 
-            }
-            50% { 
-                transform: translateZ(80px) scale(1.2); 
-                opacity: 1; 
-            }
+            0%, 100% { transform: translate(-50%, -50%) translateY(-180px) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) translateY(-180px) scale(1.2); opacity: 1; }
         }
         
-        /* Brilho holográfico - Aplicado por último */
+        /* BRILHO */
         .glow {
             position: absolute;
-            width: 400px;
-            height: 400px;
+            width: 150%;
+            height: 150%;
             background: radial-gradient(circle, 
-                rgba(0, 255, 255, 0.15) 0%, 
-                rgba(255, 0, 255, 0.1) 30%, 
+                rgba(0,255,255,0.2) 0%, 
+                rgba(255,0,255,0.1) 40%, 
                 transparent 70%);
             border-radius: 50%;
-            animation: glow-pulse 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) translateZ(-50px);
-            filter: blur(30px);
+            transform: translate(-50%, -50%);
+            filter: blur(40px);
             z-index: 0;
-            opacity: 0.3;
-        }
-        
-        @keyframes glow-pulse {
-            0%, 100% { 
-                opacity: 0.3; 
-                transform: translate(-50%, -50%) translateZ(-50px) scale(1); 
-            }
-            50% { 
-                opacity: 0.6; 
-                transform: translate(-50%, -50%) translateZ(-50px) scale(1.15); 
-            }
-        }
-        
-        /* Efeitos aumentados no hover */
-        .flower-container:hover .petal {
-            box-shadow: 
-                0 0 70px rgba(0, 255, 255, 0.7),
-                0 0 100px rgba(255, 0, 255, 0.5),
-                inset 0 12px 35px rgba(255, 255, 255, 0.5);
-            filter: brightness(1.3);
-        }
-        
-        .flower-container:hover .stem {
-            box-shadow: 
-                0 0 50px rgba(0, 255, 255, 0.6),
-                0 0 80px rgba(255, 0, 255, 0.4),
-                inset 0 0 25px rgba(255, 255, 255, 0.6);
-        }
-        
-        .flower-container:hover .center {
-            box-shadow: 
-                0 0 90px rgba(255, 255, 0, 0.7),
-                0 0 140px rgba(255, 255, 0, 0.4),
-                inset 0 0 40px rgba(255, 255, 255, 0.8);
-        }
-        
-        .flower-container:hover .glow {
-            opacity: 0.5;
-            filter: blur(40px) brightness(1.3);
-        }
-        
-        /* === CLICK: Inversão === */
-        
-        #toggle:checked ~ .scene .flower-container .holo-flower {
-            animation: float-inverted 16s ease-in-out infinite, 
-                       rotate-inverted 30s linear infinite;
-        }
-        
-        #toggle:checked ~ .scene .flower-container .center {
-            background: radial-gradient(circle at 35% 35%, 
-                #ff00ff 0%, 
-                #00ffff 40%, 
-                #ffff00 70%);
-            animation: pulse-inverted 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-        
-        @keyframes float-inverted {
-            0%, 100% { 
-                transform: translateY(0) rotateX(175deg) rotateZ(0deg); 
-            }
-            50% { 
-                transform: translateY(-20px) rotateX(165deg) rotateZ(2deg); 
-            }
-        }
-        
-        @keyframes rotate-inverted {
-            0% { 
-                transform: rotateY(0deg); 
-            }
-            100% { 
-                transform: rotateY(-360deg); 
-            }
-        }
-        
-        @keyframes pulse-inverted {
-            0%, 100% { 
-                transform: translateZ(80px) scale(1) rotate(0deg); 
-                opacity: 0.9; 
-            }
-            50% { 
-                transform: translateZ(80px) scale(1.2) rotate(180deg); 
-                opacity: 1; 
-            }
         }
         
         /* Botão toggle */
@@ -406,94 +174,79 @@
             position: fixed;
             bottom: 30px;
             left: 50%;
-            transform: translateX(-50%) translateZ(100px);
-            background: rgba(0, 255, 255, 0.15);
+            transform: translateX(-50%);
+            background: rgba(0, 255, 255, 0.2);
             color: #00ffff;
-            padding: 14px 28px;
-            border-radius: 35px;
+            padding: 12px 24px;
+            border-radius: 30px;
             cursor: pointer;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
             font-family: sans-serif;
+            font-size: 14px;
             font-weight: bold;
-            font-size: 15px;
-            letter-spacing: 1px;
-            text-align: center;
-            min-width: 180px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s;
+            z-index: 100;
         }
         
         .toggle-btn:hover {
-            background: rgba(0, 255, 255, 0.25);
+            background: rgba(0, 255, 255, 0.3);
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
-            transform: translateX(-50%) translateZ(100px) scale(1.1);
         }
         
-        #toggle:checked + .toggle-btn {
-            background: rgba(255, 0, 255, 0.2);
-            border-color: #ff00ff;
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
-            color: #ff00ff;
-        }
-        
-        /* Instrução visual mínima */
-        .instruction {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateZ(50px);
-            color: rgba(0, 255, 255, 0.6);
-            font-family: monospace;
-            font-size: 12px;
-            text-align: center;
-            backdrop-filter: blur(5px);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            z-index: 1000;
-        }
-        
-        /* Partículas sutis */
-        .particle {
-            position: fixed;
-            background: rgba(0, 200, 255, 0.2);
-            border-radius: 50%;
-            animation: particle-float 20s infinite cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
-        }
-        
-        @keyframes particle-float {
-            0%, 100% { 
-                transform: translate3d(0, 0, var(--depth)) scale(1); 
-                opacity: 0.2; 
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .petal {
+                width: 50%;
+                height: 45%;
             }
-            50% { 
-                transform: translate3d(var(--x), var(--y), var(--depth)) scale(1.5); 
-                opacity: 0.5; 
+            
+            .petal1, .petal2, .petal3, .petal4, .petal5 {
+                transform: rotateY(var(--rotation)) translateY(-150px) rotateX(25deg);
+            }
+            
+            .center {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .stem {
+                width: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .petal {
+                width: 60%;
+                height: 40%;
+            }
+            
+            .petal1, .petal2, .petal3, .petal4, .petal5 {
+                transform: rotateY(var(--rotation)) translateY(-120px) rotateX(25deg);
+            }
+            
+            .center {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .stem {
+                width: 14px;
+            }
+            
+            .toggle-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+                bottom: 20px;
             }
         }
     </style>
 </head>
 <body>
     <input type="checkbox" id="toggle">
-    <label for="toggle" class="toggle-btn">INVERTER ANIMAÇÃO</label>
-    
-    <div class="instruction">HOVER: Projeta 3D • CLICK: Inverte</div>
+    <label for="toggle" class="toggle-btn">INVERTER FLOR</label>
     
     <div class="scene">
-        <!-- Camadas de profundidade -->
-        <div class="depth-layer layer-1" style="--z: -1000px;"></div>
-        <div class="depth-layer layer-2" style="--z: -700px;"></div>
-        <div class="depth-layer layer-3" style="--z: -400px;"></div>
-        <div class="hologrid"></div>
-        
-        <!-- Partículas com diferentes profundidades -->
-        <div class="particle" style="--depth: -600px; --x: 100px; --y: -80px; width: 4px; height: 4px; top: 20%; left: 15%;"></div>
-        <div class="particle" style="--depth: -900px; --x: -120px; --y: 60px; width: 3px; height: 3px; top: 70%; left: 85%;"></div>
-        
-        <!-- Container da flor -->
         <div class="flower-container">
             <div class="holo-flower">
                 <div class="glow"></div>
