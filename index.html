@@ -15,13 +15,11 @@
             min-height: 100vh;
             overflow: hidden;
             perspective: 800px;
-            touch-action: manipulation;
         }
         
-        /* Sistema toggle */
         #toggle { display: none; }
         
-        /* Fundo ajustado */
+        /* Fundo simplificado */
         .bg-layer {
             position: fixed;
             width: 100%;
@@ -30,31 +28,10 @@
         }
         
         .bg1 {
-            background: radial-gradient(circle at 30% 20%, rgba(0,100,255,0.12), transparent 45%),
-                       radial-gradient(circle at 70% 80%, rgba(255,0,200,0.12), transparent 45%);
+            background: radial-gradient(circle at 30% 20%, rgba(0,100,255,0.1), transparent 45%),
+                       radial-gradient(circle at 70% 80%, rgba(255,0,200,0.1), transparent 45%);
             filter: blur(30px);
             animation: bg-float 20s infinite ease-in-out;
-        }
-        
-        .bg2 {
-            background: radial-gradient(circle at 60% 30%, rgba(0,255,255,0.08), transparent 40%),
-                       radial-gradient(circle at 40% 70%, rgba(255,0,100,0.08), transparent 40%);
-            filter: blur(40px);
-            animation: bg-float 30s infinite ease-in-out reverse;
-        }
-        
-        /* Grade sutil */
-        .grid {
-            position: fixed;
-            width: 200%;
-            height: 200%;
-            background-image: 
-                linear-gradient(rgba(0,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -2;
-            animation: grid-rotate 20s linear infinite;
-            transform-origin: center;
         }
         
         @keyframes bg-float {
@@ -63,81 +40,53 @@
             66% { transform: translate(15px, -18px) scale(0.97); }
         }
         
-        @keyframes grid-rotate {
-            0% { transform: translate(-50%, -50%) rotateX(60deg) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotateX(60deg) rotate(360deg); }
-        }
-        
-        /* Container responsivo */
+        /* Container */
         .flower-container {
             position: relative;
             transform-style: preserve-3d;
             cursor: pointer;
-            width: min(90vw, 400px);
-            height: min(90vh, 600px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 350px;
+            height: 500px;
         }
         
-        /* Flor com proporções corrigidas */
-        .holo-flower {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            max-width: 350px;
-            max-height: 500px;
-            transform-style: preserve-3d;
-            animation: float 14s ease-in-out infinite, rotate 30s linear infinite;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        /* HOVER melhorado */
+        /* HOVER */
         .flower-container:hover .holo-flower {
             transform: scale(1.3);
             filter: brightness(1.4);
         }
         
         .flower-container:hover .stem {
-            box-shadow: 0 0 60px #00ffff, 
-                        0 0 100px #ff00ff,
-                        inset 0 0 25px rgba(255,255,255,0.4);
-            transform: scaleY(1.05);
+            box-shadow: 0 0 60px #00ffff;
         }
         
         .flower-container:hover .petal {
-            box-shadow: 0 0 80px rgba(0,255,255,0.9),
-                        0 0 120px rgba(255,0,255,0.7);
-            opacity: 0.95;
-            transform-origin: center 200px;
+            box-shadow: 0 0 80px rgba(0,255,255,0.9);
         }
         
-        .flower-container:hover .center {
-            box-shadow: 0 0 120px #ffff00,
-                        0 0 180px rgba(255,255,0,0.6);
-            animation: pulse-fast 1.2s ease-in-out infinite;
-        }
-        
-        /* CLICK inverte animação */
+        /* CLICK inverte */
         #toggle:checked ~ .flower-container .holo-flower {
             animation: float-inverted 14s ease-in-out infinite, 
                        rotate-inverted 30s linear infinite;
         }
         
-        #toggle:checked ~ .flower-container .center {
-            background: radial-gradient(circle, #ff00ff, #00ffff);
-            box-shadow: 0 0 100px #ff00ff;
+        /* Flor */
+        .holo-flower {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: float 14s ease-in-out infinite, rotate 30s linear infinite;
+            transition: all 0.4s;
         }
         
-        /* Animações */
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotateX(5deg) rotateZ(1deg); }
-            50% { transform: translateY(-20px) rotateX(12deg) rotateZ(-1deg); }
+            0%, 100% { transform: translateY(0) rotateX(5deg); }
+            50% { transform: translateY(-20px) rotateX(12deg); }
         }
         
         @keyframes float-inverted {
-            0%, 100% { transform: translateY(0) rotateX(175deg) rotateZ(1deg); }
-            50% { transform: translateY(-20px) rotateX(168deg) rotateZ(-1deg); }
+            0%, 100% { transform: translateY(0) rotateX(175deg); }
+            50% { transform: translateY(-20px) rotateX(168deg); }
         }
         
         @keyframes rotate {
@@ -150,200 +99,115 @@
             100% { transform: rotateY(-360deg); }
         }
         
-        /* CAULE MAIOR E MAIS GROSSO */
+        /* CAULE - Mais grosso e próximo */
         .stem {
             position: absolute;
-            width: 18px; /* Aumentado */
-            height: 280px; /* Aumentado */
+            width: 20px; /* Mais grosso */
+            height: 300px; /* Mais longo */
             bottom: 0;
-            left: calc(50% - 9px);
+            left: calc(50% - 10px);
             background: linear-gradient(to top, 
                 #00ffff 0%, 
-                #00ffff 25%, 
-                #ff00ff 50%, 
-                #ff00ff 75%,
-                #ffff00 100%);
-            border-radius: 9px;
+                #00ffff 30%, 
+                #ff00ff 60%, 
+                #ff00ff 90%);
+            border-radius: 10px;
             box-shadow: 0 0 50px #00ffff,
-                        inset 0 0 20px rgba(255,255,255,0.5),
-                        inset 0 -10px 30px rgba(0,0,0,0.3);
-            transform-origin: center bottom;
-            transition: all 0.4s;
-            z-index: 1;
+                        inset 0 0 20px rgba(255,255,255,0.5);
+            z-index: 3; /* Maior z-index */
         }
         
-        .stem::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent 20%, 
-                rgba(255,255,255,0.3) 50%, 
-                transparent 80%);
-            border-radius: inherit;
-        }
-        
-        /* PÉTALAS MAIORES E MAIS IMPONENTES */
+        /* PÉTALAS - Próximas do caule */
         .petal {
             position: absolute;
-            width: 140px; /* Aumentado */
-            height: 220px; /* Aumentado */
+            width: 130px; /* Ligeiramente menor */
+            height: 180px; /* Mais curtas */
             background: radial-gradient(circle at 50% 20%, 
                 rgba(255,0,255,0.95) 0%, 
-                rgba(0,255,255,0.8) 40%, 
-                rgba(0,255,255,0.5) 70%);
-            border-radius: 60% 60% 55% 55% / 65% 65% 45% 45%;
-            box-shadow: 0 0 70px rgba(0,255,255,0.85),
-                        inset 0 10px 35px rgba(255,255,255,0.4),
-                        inset 0 -10px 20px rgba(0,0,0,0.2),
-                        0 5px 15px rgba(0,0,0,0.3);
+                rgba(0,255,255,0.8) 40%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 60px rgba(0,255,255,0.85),
+                        inset 0 10px 30px rgba(255,255,255,0.4);
             opacity: 0.9;
-            left: calc(50% - 70px);
-            transform-origin: center 210px;
+            /* POSICIONADAS MAIS PRÓXIMAS DO CENTRO */
+            left: calc(50% - 65px);
+            transform-origin: center 90px; /* Ponto de rotação mais baixo */
             transition: all 0.4s;
-            filter: brightness(1.1) contrast(1.1);
+            z-index: 2; /* Abaixo do caule */
         }
         
-        .petal::after {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 25%;
-            width: 50%;
-            height: 35%;
-            background: radial-gradient(circle, 
-                rgba(255,255,255,0.5) 0%, 
-                transparent 70%);
-            border-radius: 50%;
-            filter: blur(5px);
+        /* Pétalas mais próximas - menor translateY */
+        .petal1 { 
+            transform: rotate(0deg) translateY(-100px) rotateX(25deg); 
+            top: 120px;
+        }
+        .petal2 { 
+            transform: rotate(72deg) translateY(-100px) rotateX(25deg); 
+            top: 120px;
+        }
+        .petal3 { 
+            transform: rotate(144deg) translateY(-100px) rotateX(25deg); 
+            top: 120px;
+        }
+        .petal4 { 
+            transform: rotate(216deg) translateY(-100px) rotateX(25deg); 
+            top: 120px;
+        }
+        .petal5 { 
+            transform: rotate(288deg) translateY(-100px) rotateX(25deg); 
+            top: 120px;
         }
         
-        /* Distribuição das pétalas maiores */
-        .petal1 { transform: rotate(0deg) translateY(-150px) rotateX(25deg) scale(1); }
-        .petal2 { transform: rotate(72deg) translateY(-150px) rotateX(25deg) rotateZ(8deg) scale(0.98); }
-        .petal3 { transform: rotate(144deg) translateY(-150px) rotateX(25deg) rotateZ(-6deg) scale(1.02); }
-        .petal4 { transform: rotate(216deg) translateY(-150px) rotateX(25deg) rotateZ(4deg) scale(0.99); }
-        .petal5 { transform: rotate(288deg) translateY(-150px) rotateX(25deg) rotateZ(-7deg) scale(1.01); }
-        
-        /* CENTRO MAIOR */
+        /* CENTRO - Sobre o caule */
         .center {
             position: absolute;
-            width: 100px; /* Aumentado */
-            height: 100px;
-            top: 130px;
-            left: calc(50% - 50px);
-            background: radial-gradient(circle at 35% 35%, 
-                #ffff00 0%, 
-                #ff00ff 40%, 
-                #00ffff 80%,
-                transparent 120%);
-            border-radius: 50%;
-            box-shadow: 0 0 100px #ffff00,
-                        0 0 150px rgba(255,255,0,0.5),
-                        inset 0 0 50px rgba(255,255,255,0.7),
-                        0 10px 30px rgba(0,0,0,0.4);
-            animation: pulse 4s ease-in-out infinite,
-                       rotate-center 25s linear infinite;
-            transition: all 0.4s;
-            z-index: 2;
-        }
-        
-        .center::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
+            width: 90px;
+            height: 90px;
+            top: 100px; /* Mais baixo */
+            left: calc(50% - 45px);
             background: radial-gradient(circle, 
-                rgba(255,255,255,0.9) 0%, 
-                transparent 70%);
+                #ffff00 0%, 
+                #ff00ff 50%, 
+                #00ffff 100%);
             border-radius: 50%;
-            filter: blur(10px);
+            box-shadow: 0 0 90px #ffff00,
+                        inset 0 0 40px rgba(255,255,255,0.7);
+            animation: pulse 4s ease-in-out infinite;
+            z-index: 4; /* Acima de tudo */
         }
         
         @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.2); opacity: 1; }
         }
         
-        @keyframes pulse-fast {
-            0%, 100% { transform: scale(1); opacity: 0.95; }
-            50% { transform: scale(1.3); opacity: 1; }
-        }
-        
-        @keyframes rotate-center {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* BRILHO MAIOR */
+        /* BRILHO - Centralizado */
         .glow {
             position: absolute;
-            width: 450px;
-            height: 450px;
+            width: 350px;
+            height: 350px;
             background: radial-gradient(circle, 
-                rgba(0,255,255,0.25) 0%, 
-                rgba(255,0,255,0.18) 35%, 
-                rgba(255,255,0,0.1) 50%,
-                transparent 75%);
+                rgba(0,255,255,0.2) 0%, 
+                rgba(255,0,255,0.15) 40%, 
+                transparent 70%);
             border-radius: 50%;
             animation: glow-pulse 7s ease-in-out infinite;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            transition: all 0.5s;
-            z-index: -1;
             filter: blur(20px);
+            z-index: 1;
         }
         
         @keyframes glow-pulse {
             0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.15); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
         }
         
-        /* Partículas sutis */
-        .particles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(0, 255, 255, 0.4);
-            border-radius: 50%;
-            box-shadow: 0 0 12px #00ffff;
-            animation-duration: 20s;
-            animation-iteration-count: infinite;
-        }
-        
-        .particle:nth-child(1) {
-            width: 3px; height: 3px;
-            top: 15%; left: 15%;
-            animation: particle1 25s infinite;
-        }
-        .particle:nth-child(2) {
-            width: 4px; height: 4px;
-            top: 70%; left: 85%;
-            animation: particle2 30s infinite;
-        }
-        
-        @keyframes particle1 {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-            50% { transform: translate(100px, -80px) scale(1.8); opacity: 0.8; }
-        }
-        @keyframes particle2 {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-            50% { transform: translate(-120px, 60px) scale(1.6); opacity: 0.9; }
-        }
-        
-        /* Botão responsivo */
+        /* Botão */
         .toggle-btn {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 255, 255, 0.15);
@@ -359,14 +223,12 @@
             transition: all 0.3s;
             backdrop-filter: blur(10px);
             z-index: 100;
-            min-width: 200px;
             text-align: center;
         }
         
-        .toggle-btn:hover, .toggle-btn:active {
+        .toggle-btn:hover {
             background: rgba(0, 255, 255, 0.25);
             box-shadow: 0 0 35px rgba(0, 255, 255, 0.9);
-            transform: translateX(-50%) scale(1.08);
         }
         
         #toggle:checked + .toggle-btn {
@@ -375,83 +237,6 @@
             box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
             color: #ff00ff;
         }
-        
-        /* Media query para mobile */
-        @media (max-width: 768px) {
-            .holo-flower {
-                max-width: 300px;
-                max-height: 450px;
-            }
-            
-            .stem {
-                width: 16px;
-                height: 250px;
-                left: calc(50% - 8px);
-            }
-            
-            .petal {
-                width: 120px;
-                height: 190px;
-                left: calc(50% - 60px);
-                transform-origin: center 180px;
-            }
-            
-            .petal1 { transform: rotate(0deg) translateY(-140px) rotateX(25deg) scale(1); }
-            .petal2 { transform: rotate(72deg) translateY(-140px) rotateX(25deg) rotateZ(8deg) scale(0.98); }
-            .petal3 { transform: rotate(144deg) translateY(-140px) rotateX(25deg) rotateZ(-6deg) scale(1.02); }
-            .petal4 { transform: rotate(216deg) translateY(-140px) rotateX(25deg) rotateZ(4deg) scale(0.99); }
-            .petal5 { transform: rotate(288deg) translateY(-140px) rotateX(25deg) rotateZ(-7deg) scale(1.01); }
-            
-            .center {
-                width: 85px;
-                height: 85px;
-                top: 120px;
-                left: calc(50% - 42.5px);
-            }
-            
-            .glow {
-                width: 380px;
-                height: 380px;
-            }
-            
-            .toggle-btn {
-                padding: 12px 24px;
-                font-size: 15px;
-                min-width: 180px;
-                bottom: 15px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .holo-flower {
-                max-width: 280px;
-                max-height: 420px;
-            }
-            
-            .stem {
-                width: 14px;
-                height: 220px;
-            }
-            
-            .petal {
-                width: 110px;
-                height: 180px;
-                left: calc(50% - 55px);
-            }
-            
-            .center {
-                width: 75px;
-                height: 75px;
-                top: 110px;
-                left: calc(50% - 37.5px);
-            }
-            
-            .toggle-btn {
-                padding: 10px 20px;
-                font-size: 14px;
-                min-width: 160px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -459,24 +244,17 @@
     <label for="toggle" class="toggle-btn">INVERTER ANIMAÇÃO</label>
     
     <div class="bg-layer bg1"></div>
-    <div class="bg-layer bg2"></div>
-    <div class="grid"></div>
-    
-    <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
     
     <div class="flower-container">
         <div class="holo-flower">
             <div class="stem"></div>
+            <div class="glow"></div>
             <div class="petal petal1"></div>
             <div class="petal petal2"></div>
             <div class="petal petal3"></div>
             <div class="petal petal4"></div>
             <div class="petal petal5"></div>
             <div class="center"></div>
-            <div class="glow"></div>
         </div>
     </div>
 </body>
